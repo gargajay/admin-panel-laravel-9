@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +19,27 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
+
+   $user =  Auth::user();
+   if ($user->hasRole('Super-Admin')) {
+   // dd(1);
+   return view('backend.dashboard');
+     }
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+
+
+
+Route::group(['middleware' => ['auth']], function()
+{
+
+    //Admin Dashboard
+   
+
+    
+  
+});
+
 require __DIR__.'/auth.php';
+require __DIR__.'/backend.php';

@@ -3,21 +3,22 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Support\Facades\Hash;
 
-class DatabaseSeeder extends Seeder
+
+class UserRoleAndPermissionSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Create the initial roles and permissions.
      *
      * @return void
      */
     public function run()
     {
+        // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
@@ -59,5 +60,3 @@ class DatabaseSeeder extends Seeder
         $user->assignRole($role3);
     }
 }
-
-
