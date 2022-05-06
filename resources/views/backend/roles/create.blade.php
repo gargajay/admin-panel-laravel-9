@@ -7,17 +7,15 @@
     </x-slot>
    
     <div class="content_inner">
-        <div class="main_title">Edit a {{$title}}</div>
+        <div class="main_title">Add a {{$title}}</div>
         <div class="sub_title">{{$title}} Information</div>
-    <form  method="POST"  action="{{url('backend/'.lcFirst($title).'/'.$model->id)}}">
-        @method('PUT')
-
+    <form action="{{url('backend/'.lcfirst($title))}}" method="POST">
        @csrf
        
-       @include('backend.roles.form', ['model' => $model])
+       @include('backend.roles.form', ['model' => ''])
         <div class="row">
             <div class="col-md-12">
-                <button  class="save_btn">Update</button>
+                <button  class="save_btn">Save</button>
             </div>
         </div>
     </form>    
@@ -30,23 +28,8 @@
     @section('script')
     <script>
 
-          jQuery('.list').each(function() 
-            {
-
-                var check2 = true;
-                if(!this.checked){
-                    check2 = false;
-                }
-
-                if(!check2){
-                jQuery('#checkall').prop('checked',false);
-
-                }else{
-                jQuery('#checkall').prop('checked',true);
-
-                }
-            });  
-         
+        
+                
             
         function toggle(source)
          {
@@ -58,6 +41,8 @@
                     checkboxes[i].checked = source.checked;
             }
         }
+
+
 
         jQuery('.list').click(function()
          {
@@ -80,8 +65,10 @@
           });
 
 
+        
 
-      
+
+       
 
       
     </script>

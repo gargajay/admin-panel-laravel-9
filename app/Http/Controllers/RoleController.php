@@ -2,15 +2,18 @@
     
     namespace App\Http\Controllers;
     use App\Http\Controllers\Controller;
-    use App\Models\User;
+use App\Models\RoleModel;
+use App\Models\User;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
-    use Spatie\Permission\Models\Role;
     use Spatie\Permission\Models\Permission;
     use Illuminate\Support\Facades\Validator;
     use Illuminate\Support\Facades\Redirect;
     use DB;
+use Exception;
+use Facade\FlareClient\Http\Response;
 use Illuminate\Support\Facades\View;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
@@ -22,6 +25,9 @@ class RoleController extends Controller
          $this->middleware('permission:product-create', ['only' => ['create','store']]);
          $this->middleware('permission:product-edit', ['only' => ['edit','update']]);
          $this->middleware('permission:product-delete', ['only' => ['destroy']]);
+         View::share('title', 'Role');
+         View::share('mainModel', new RoleModel());
+
          
     }
     
@@ -32,12 +38,21 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        
-        
-        $items = Role::orderBy('id','DESC')->paginate(2);
-        View::share('title', 'Role');
+        $name = $request->query('name');
 
-        return view('backend.roles.index',compact('items'));
+
+        $items = RoleModel::orderBy('id','DESC');
+
+
+        if(!empty($name)) 
+        {
+            $items =  $items->where('name', 'like', '%' . $name . '%');
+        }
+        
+
+        $items =  $items->paginate(10);
+
+        return view('backend.roles.index',compact('items','name'));
         ;
     }
     
@@ -48,8 +63,9 @@ class RoleController extends Controller
      */
     public function create()
     {
+        $rolePermissions = []; 
         $permission = Permission::orderBy('order_index','asc')->get();
-        return view('backend.roles.create',compact('permission'));
+        return view('backend.roles.create',compact('permission','rolePermissions'));
     }
     
     /**
@@ -69,13 +85,19 @@ class RoleController extends Controller
         if ($validator->fails()) {
 
             //dd($validator);
-            return Redirect::back()->with('error','Please choose at least one permission');
+            return Redirect::back()->withInput()->withErrors($validator);
         }else{
 
+
             $role = Role::create(['name' => $request->input('name')]);
+
+            
             $role->syncPermissions($request->input('permission'));
+            $role->status_id = $request->status_id;
+
+            $role->save();
         
-            return redirect('backend/roles')
+            return redirect('backend/role')
                             ->with('success','Role created successfully');
         }
 
@@ -90,7 +112,7 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-        $role = Role::find($id);
+        $role = RoleModel::find($id);
         $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
             ->where("role_has_permissions.role_id",$id)
             ->get();
@@ -106,13 +128,13 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $role = Role::find($id);
+        $model = RoleModel::find($id);
         $permission = Permission::orderBy('order_index','asc')->get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();
       
-        return view('backend.roles.edit',compact('role','permission','rolePermissions'));
+        return view('backend.roles.edit',compact('model','permission','rolePermissions'));
     }
     
     /**
@@ -137,13 +159,18 @@ class RoleController extends Controller
             return Redirect::back()->with('error','Please choose at least one permission');
         }else{
 
-            $role = Role::find($id);
+            $role = RoleModel::find($id);
             $role->name = $request->input('name');
             $role->save();
         
             $role->syncPermissions($request->input('permission'));
+
+            $role->status_id = $request->status_id;
+
+            $role->save();
+
         
-            return redirect('backend/roles')->with('success','Role updated successfully');
+            return redirect('backend/role')->with('success','Role updated successfully');
         }
     }
     /**
@@ -155,7 +182,64 @@ class RoleController extends Controller
     public function destroy($id)
     {
         DB::table("roles")->where('id',$id)->delete();
-        return redirect('backend/roles')
+        return redirect('backend/role')
                         ->with('success','Role deleted successfully');
     }
+
+    /**
+     * update status
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function status($id,$status)
+    {
+       $item = Role::where('id',$id)->first();
+
+       if(empty($item)){
+        return redirect('backend/role')
+        ->with('error','Record not Found !');
+       }
+       
+       $item->status_id = $status;
+       $item->save();
+
+        return redirect('backend/role')
+                        ->with('success','Status Updated successfully');
+    }
+
+
+     /**
+     * update status
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function bulkDelete(Request $request)
+    {
+
+        $request->validate([
+            'ids'          => 'required',
+        ]);
+        
+        $ids = $request->ids;
+
+
+       try {
+            $items=Role::find($ids)->each(function ($product, $key) {
+                $product->delete();
+                });
+            return response(['message' => 'Roles Deleted Successfully']);
+
+        }
+        catch(Exception $e) {
+         return response(['message' => $e->getMessage()]);
+
+        }
+
+       
+
+    }
+
+
 }

@@ -22,7 +22,8 @@
           href="https://cdn.jsdelivr.net/npm/metismenu/dist/metisMenu.min.css"
         />
 
-      
+        <link id="skin-default" rel="stylesheet" href="{{asset('backend/assets/toaste/notification.css')}}">
+
 
       
     </head>
@@ -35,6 +36,7 @@
     
             <!-- Page Content  -->
             <div id="content">
+
                 <button type="button" id="sidebarCollapse" class="btn btn-info">
                     <i class="fas fa-align-left"></i>
                 </button>
@@ -99,8 +101,26 @@
         <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
         {{-- <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script> --}}
-        <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script>
+        {{-- <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.min.js"></script> --}}
         <script src="{{publicPath()}}/assets/js/main.js"></script>
         <script src="{{publicPath()}}/assets/js/all.js"></script>
+        <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+        <script>
+          tinymce.init({
+            selector: '#mytextarea',
+            plugins: [
+              'a11ychecker','advlist','advcode','advtable','autolink','checklist','export',
+              'lists','link','image','charmap','preview','anchor','searchreplace','visualblocks',
+              'powerpaste','fullscreen','formatpainter','insertdatetime','media','table','help','wordcount'
+            ],
+            toolbar: 'undo redo | formatpainter casechange blocks | bold italic backcolor | ' +
+              'alignleft aligncenter alignright alignjustify | ' +
+              'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help'
+          });
+        </script>
+         <script src="{{asset('backend/assets/toaste/notification.js')}}"></script>
+         <x-alert/>
+
+        @yield('script')
     </body>
 </html>

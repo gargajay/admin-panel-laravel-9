@@ -75,8 +75,9 @@ a:focus {
     content: '';
     display: inline-block;
     height: 24px;
+    background: #fff;
+
     width: 24px;
-    background: #fd684a;
     border-radius: 20px;
     position: absolute;
     top: 3px;
@@ -85,7 +86,8 @@ a:focus {
 }
 
 .toggle-switch input[type="checkbox"]:checked + label .toggle-track:before {
-    background: #fff;
+    background: #fd684a;
+
     right: 22px;
 }
 .status_div {
@@ -577,10 +579,13 @@ select.custom_input {
     background-position: right 10px center;
     background-size: 15px;
 }
+.form-group {
+    margin-bottom: 20px;
+}
 .custom_input {
     font-size: 14px;
     color: #11142D;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     display: block;
     width: 100%;
     border: 1px solid #BCBCBC;
@@ -616,7 +621,9 @@ select.custom_input {
     border-radius: 30px;
     font-weight: 600;
     transition: 0.3s;
+    border: 0px;
 }
+
 .save_btn:hover {
     background-color: #091b33;
     color: #fff;
@@ -946,4 +953,70 @@ a.article:hover {
 .dashboard_right {
     margin-top: 10px;
 }
+}
+
+
+.info_check {
+    display: block;
+    position: relative;
+    padding-left: 32px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    line-height: 16px;
+}
+
+.info_check .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    background-color: #fff;
+    border: 1px solid #e84c0f;
+    border-radius: 0px;
+}
+
+.info_check input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.info_check input:checked ~ .checkmark {
+    background-color: #e84c0f;
+}
+
+.info_check input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.info_check .checkmark:after {
+    left: 7px;
+    top: 2px;
+    width: 7px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate( 45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate( 45deg);
+}
+.info_check .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.invalid
+{
+color: #e85347;
+font-size: 12px;
+margin-bottom: 10px;
 }
