@@ -14,7 +14,7 @@ function demo3(msg,cl="#2e344e"){
       background: cl,
       color: '#ffffff',
       transition: 'all 350ms linear',
-      height:'50px'
+      height:'100%'
     },
   });
   }

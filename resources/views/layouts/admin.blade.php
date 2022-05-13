@@ -61,7 +61,7 @@
                                     <ul class="dropdown-menu profile_menu" aria-labelledby="logout">
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
-                                      <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                                      <li><a class="dropdown-item" href="{{url('backend/user/profile')}}">Edit Profile</a></li>
                                       <li>
                                        
                 

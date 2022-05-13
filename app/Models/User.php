@@ -14,6 +14,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable,HasRoles;
 
+
+    const STATUS_ACTIVE = 1;
+
+    const STATUS_DEACTIVED = 0;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,6 +28,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'profile_photo'
     ];
 
     /**
@@ -47,6 +54,32 @@ class User extends Authenticatable
     public function getRole(){
         return  Auth::user()->roles->pluck('name')[0] ?? '';
     }
+
+    public static function getStatus($id = null)
+    {
+        $list = array(
+            self::STATUS_ACTIVE => "Active",
+            self::STATUS_DEACTIVED=> "Deactivated",
+        );
+        if ($id === null)
+            return $list;
+        return isset($list[$id]) ? $list[$id] : 'Not Defined';
+    }
+
+
+    public function getProfilePhotoAttribute($value)
+    {
+        if ($value != '') {
+            return url('/') . '/uploads/' . $value;
+        }
+        
+        return url('/') . '/uploads/user.png' ;
+    }
+
+
+
+
+
 
 
 }

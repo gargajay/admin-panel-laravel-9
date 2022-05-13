@@ -19,6 +19,7 @@
                 <div class="hide" style="display:none">
                     <span id="count">0</span>  Row Selected &nbsp;
                     @can(lcFirst($title)."-delete")
+
                     <a class="view_all create" onclick="deleteAll()" ><i class="fa fa-trash "></i></a>
                     @endcan
                 </div>
@@ -58,36 +59,32 @@
                               </label> </td>  
                             <td>{{$item->name}}</td>
                             <td>
-                              
-                                
                                 <div class="status_div">
                                     <div class="toggle-switch">
-                                        
                                     <input type="checkbox" @if(!auth()->user()->can(lcFirst($title)."-edit"))
-                                        disabled
-                                    @endif   class="chk-btn" 
-                                    data-id="{{$item->id}}" data-status="<?= ($item->status_id==1) ? 0:1;  ?> " id="chkTest_{{$item->id}}"  name="chkTest_{{$item->id}}" <?= ($item->status_id==1) ? 'checked':"";  ?>  />
-                                        
-                                  
+                                    disabled
+                                @endif  class="chk-btn" data-id="{{$item->id}}" data-status="<?= ($item->status_id==1) ? 0:1;  ?> " id="chkTest_{{$item->id}}"  name="chkTest_{{$item->id}}" <?= ($item->status_id==1) ? 'checked':"";  ?>  />
                                     <label for="chkTest_{{$item->id}}">
                                         <span class="toggle-track"></span>
                                     </label>
                                     </div>
                                 </div>
-                              
                             </td>
                             <td>
-                                <form method="POST" action="{{url('backend/'.lcFirst($title)."/".$item->id)}}">
-                                    @csrf
-                                    @method('delete')
-                                    @can(lcFirst($title)."-delete")
-                                    <a  class="delete" ><i class="fa fa-trash text-danger"></i></a> |
-                                    @endcan
-                                    @can(lcFirst($title)."-edit")
-                                    <a href="{{url('backend/'.lcFirst($title)."/".$item->id.'/edit')}}" class=" "><i class="fa fa-edit text-sucess"></i></a>
-                                    @endcan
-
-                                </form>
+                               
+                                    <form method="POST" action="{{url('backend/'.lcFirst($title)."/".$item->id)}}">
+                                        @csrf
+                                        @method('delete')
+                                        
+                                        @can(lcFirst($title)."-delete")
+                                        <a  class="delete" ><i class="fa fa-trash text-danger"></i></a> |
+                                        @endcan
+                                        @can(lcFirst($title)."-edit")
+                                        <a href="{{url('backend/'.lcFirst($title)."/".$item->id.'/edit')}}" class=" "><i class="fa fa-edit text-sucess"></i></a>
+                                        @endcan
+                                    </form>
+                                
+                                
                             </td>
                         </tr>
                         @php

@@ -1020,3 +1020,14 @@ color: #e85347;
 font-size: 12px;
 margin-bottom: 10px;
 }
+
+
+
+
+ 
+
+  .preview__thumb img,
+    video {
+      max-width: 100%;
+      max-height: 200px;
+    }

@@ -2,8 +2,8 @@
     
     namespace App\Http\Controllers;
     use App\Http\Controllers\Controller;
-    use App\Models\RoleModel;
-    use App\Models\User;
+use App\Models\PermissionModel;
+use App\Models\User;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
     use Spatie\Permission\Models\Permission;
@@ -13,20 +13,19 @@
     use Exception;
     use Facade\FlareClient\Http\Response;
     use Illuminate\Support\Facades\View;
-    use Spatie\Permission\Models\Role;
 
-class RoleController extends Controller
+class PermissionController extends Controller
 {
     
 
     function __construct()
     {
-        $this->middleware('permission:role-edit|role-list|role-create|role-delete', ['only' => ['index','show']]);
-        $this->middleware('permission:role-create', ['only' => ['create','store']]);
-        $this->middleware('permission:role-edit', ['only' => ['edit','update']]);
-        $this->middleware('permission:role-delete', ['only' => ['destroy']]);
-         View::share('title', 'Role');
-         View::share('mainModel', new RoleModel());
+         $this->middleware('permission:permission-edit|permission-list|permission-create|permission-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:permission-create', ['only' => ['create','store']]);
+         $this->middleware('permission:permission-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:permission-delete', ['only' => ['destroy']]);
+         View::share('title', 'Permission');
+         View::share('mainModel', new PermissionModel());
 
          
     }
@@ -41,7 +40,7 @@ class RoleController extends Controller
         $name = $request->query('name');
 
 
-        $items = RoleModel::orderBy('id','DESC');
+        $items = Permission::orderBy('id','DESC');
 
 
         if(!empty($name)) 
@@ -52,7 +51,7 @@ class RoleController extends Controller
 
         $items =  $items->paginate(10);
 
-        return view('backend.roles.index',compact('items','name'));
+        return view('backend.permissions.index',compact('items','name'));
         ;
     }
     
@@ -63,9 +62,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $rolePermissions = []; 
-        $permission = Permission::orderBy('order_index','asc')->get();
-        return view('backend.roles.create',compact('permission','rolePermissions'));
+        return view('backend.permissions.create');
     }
     
     /**
@@ -77,8 +74,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $rules =   [
-            'name' => 'required|unique:roles,name',
-            'permission' => 'required',
+            'name' => 'required|unique:permissions,name',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -89,23 +85,15 @@ class RoleController extends Controller
         }else{
 
 
-            try{
-                $role = Role::create(['name' => $request->input('name')]);
+            $permission = Permission::create(['name' => $request->input('name')]);
 
             
-                $role->syncPermissions($request->input('permission'));
-                $role->status_id = $request->status_id;
-    
-                $role->save();
-            
-                return redirect('backend/role')
-                                ->with('success','Role created successfully');
-            }catch(Exception $e) {
-                return redirect('backend/role')
-                ->with('error',$e->getMessage());
-            }   
+            $permission->status_id = $request->status_id;
 
-           
+            $permission->save();
+        
+            return redirect('backend/permission')
+                            ->with('success','Permission created successfully');
         }
 
         //dd($request->permission);
@@ -121,13 +109,10 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        $model = RoleModel::find($id);
-        $permission = Permission::orderBy('order_index','asc')->get();
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
-            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
-            ->all();
+        $model = Permission::find($id);
+        
       
-        return view('backend.roles.edit',compact('model','permission','rolePermissions'));
+        return view('backend.permissions.edit',compact('model'));
     }
     
     /**
@@ -141,29 +126,21 @@ class RoleController extends Controller
     {
         $rules =   [
             'name' => 'required',
-             'permission' => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
         
         if ($validator->fails()) {
 
-            //dd($validator);
-            return Redirect::back()->with('error','Please choose at least one permission');
+            return Redirect::back()->withInput()->withErrors($validator);
         }else{
 
-            $role = RoleModel::find($id);
-            $role->name = $request->input('name');
-            $role->save();
+            $permission = Permission::find($id);
+            $permission->name = $request->input('name');
+            $permission->status_id = $request->status_id;
+            $permission->save();
         
-            $role->syncPermissions($request->input('permission'));
-
-            $role->status_id = $request->status_id;
-
-            $role->save();
-
-        
-            return redirect('backend/role')->with('success','Role updated successfully');
+            return redirect('backend/permission')->with('success','Permission updated successfully');
         }
     }
     /**
@@ -174,9 +151,9 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        DB::table("roles")->where('id',$id)->delete();
-        return redirect('backend/role')
-                        ->with('success','Role deleted successfully');
+        DB::table("permissions")->where('id',$id)->delete();
+        return redirect('backend/permission')
+                        ->with('success','Permission deleted successfully');
     }
 
     /**
@@ -187,17 +164,17 @@ class RoleController extends Controller
      */
     public function status($id,$status)
     {
-       $item = Role::where('id',$id)->first();
+       $item = Permission::where('id',$id)->first();
 
        if(empty($item)){
-        return redirect('backend/role')
+        return redirect('backend/permission')
         ->with('error','Record not Found !');
        }
        
        $item->status_id = $status;
        $item->save();
 
-        return redirect('backend/role')
+        return redirect('backend/permission')
                         ->with('success','Status Updated successfully');
     }
 
@@ -220,12 +197,12 @@ class RoleController extends Controller
 
        try {
 
-            //Role::find(25)->delete();
+            //Permission::find(25)->delete();
 
-            $items=Role::find($ids)->each(function ($product, $key) {
+            $items=Permission::find($ids)->each(function ($product, $key) {
                 $product->delete();
                 });
-            return response(['message' => 'Roles Deleted Successfully']);
+            return response(['message' => 'Permissions Deleted Successfully']);
 
         }
         catch(Exception $e) {

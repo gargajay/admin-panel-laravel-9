@@ -2,11 +2,8 @@
         <label class="custom_label" for="{{$name}}">{{ucwords(str_replace('_', ' ', $name))}}</label>
     @if($type=='password')
 
-        <a href="#" class="form-icon form-icon-right passcode-switch lg" data-target="{{$name}}">
-            <em class="passcode-icon icon-show icon ni ni-eye"></em>
-            <em class="passcode-icon icon-hide icon ni ni-eye-off"></em>
-        </a>
-        <input type="{{$type}}" name="{{$name}}"  class="form-control {{$class}}  @error('{{$name}}') error @enderror" id="{{$id}}" placeholder="{{$placeHolder}}">
+        
+        <input type="{{$type}}" name="{{$name}}"  class="custom_input {{$class}}  @error('{{$name}}') error @enderror" id="{{$id}}" placeholder="{{$placeHolder}}">
 
     @elseif($type=='select')  
 
