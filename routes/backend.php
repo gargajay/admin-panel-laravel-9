@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LabController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
@@ -42,6 +43,18 @@ Route::group(['middleware' => ['auth'],'prefix' => 'backend'], function()
     Route::get('user/status/{id}/{status}', [UserController::class, 'status']);
     Route::post('user/bulk-delete', [UserController::class, 'bulkDelete']);
     Route::get('user/profile', [UserController::class, 'myProfile']);
+
+
+         //Use Labs
+
+         Route::resources([
+            'lab' => LabController::class
+        ],
+        [
+            'except' => ['show'],
+        ]);
+        Route::get('lab/status/{id}/{status}', [LabController::class, 'status']);
+        Route::post('lab/bulk-delete', [LabController::class, 'bulkDelete']);
 
     
 

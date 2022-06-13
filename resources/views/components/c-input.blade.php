@@ -18,9 +18,13 @@
             @endforelse
          
         </select>
+    @elseif($type=='textarea')  
+    <textarea name="{{$name}}" id="mytextarea" class="custom_input {{$class}}  @error('{{$name}}') error @enderror">{{old($name,$value)}}</textarea>
+
     @else
 
-      <input type="{{$type}}" name="{{$name}}" value="{{old($name,$value)}}"  class="custom_input {{$class}}  @error('{{$name}}') error @enderror" id="{{$id}}" placeholder="{{$placeHolder}}">
+
+      <input type="{{$type}}"  name="{{$name}}" value="{{old($name,$value)}}"  class="custom_input {{$class}}  @error('{{$name}}') error @enderror" id="{{$id}}" placeholder="{{$placeHolder}}">
 
     @endif
 

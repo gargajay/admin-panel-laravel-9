@@ -31,6 +31,13 @@
             </a>
         </li>
         @endcan
+        @can("labs-list")
+        <li {{request()->routeIs('backend/lab*') ? 'active':""}}>
+            <a href="{{url('backend/lab')}}"><i class="fas fa-user"></i>Labs
+                <div class="top"></div><div class="bottom"></div>
+            </a>
+        </li>
+        @endcan
         <li>
             <a href="#"><i class="fas fa-file-invoice"></i>Orders
                 <div class="top"></div><div class="bottom"></div>
