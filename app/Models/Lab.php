@@ -47,6 +47,15 @@ class Lab extends Model
         return url('/') . '/uploads/user.png' ;
     }
 
+    public function owner()
+    {
+      return   $this->belongsTo(User::class, 'user_id');
+    }
+
+    // private function settings()
+    // {
+    //     self::line_one => "rr",
+    // }
 
     
 

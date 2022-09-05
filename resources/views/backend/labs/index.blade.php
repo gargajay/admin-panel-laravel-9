@@ -61,9 +61,10 @@
                             <td>
                                 <div class="status_div">
                                     <div class="toggle-switch">
-                                    <input type="checkbox" @if(!auth()->user()->can(lcFirst($title)."-edit"))
-                                    disabled
-                                @endif  class="chk-btn" data-id="{{$item->id}}" data-status="<?= ($item->status_id==1) ? 0:1;  ?> " id="chkTest_{{$item->id}}"  name="chkTest_{{$item->id}}" <?= ($item->status_id==1) ? 'checked':"";  ?>  />
+                                        <input                                         
+                                        type="checkbox"  data-id="{{$item->id}}" data-status="<?= ($item->status_id==1) ? 0:1;  ?> " id="chkTest_{{$item->id}}"  name="chkTest_{{$item->id}}" <?= ($item->status_id==1) ? 'checked':"";  ?>  />
+
+                              
                                     <label for="chkTest_{{$item->id}}">
                                         <span class="toggle-track"></span>
                                     </label>
@@ -75,13 +76,16 @@
                                     <form method="POST" action="{{url('backend/'.lcFirst($title)."/".$item->id)}}">
                                         @csrf
                                         @method('delete')
-                                        
+                                        @if(auth()->user()->id==$item->owner->id)
+
                                         @can(lcFirst($title)."-delete")
                                         <a  class="delete" ><i class="fa fa-trash text-danger"></i></a> |
                                         @endcan
                                         @can(lcFirst($title)."-edit")
                                         <a href="{{url('backend/'.lcFirst($title)."/".$item->id.'/edit')}}" class=" "><i class="fa fa-edit text-sucess"></i></a>
                                         @endcan
+                                        @endif
+
                                     </form>
                                 
                                 

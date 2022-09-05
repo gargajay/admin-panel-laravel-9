@@ -72,20 +72,7 @@
   <input type="hidden" name="user_id" id="" value="{{auth()->id()}}" >
 @endrole
 
-<hr/>
 
-
-<div class="row">
-    <div class="main_title">
-        Lab Footer
-    </div>
-    <div class="col-md-6">
-        <x-c-input name="phone"   value="{{$model ? $model->phone:''}}" />
-    </div>
-    <div class="col-md-6">
-        <x-c-input name="email"   value="{{$model ? $model->email:''}}" />
-    </div>
-</div>
 
 
 

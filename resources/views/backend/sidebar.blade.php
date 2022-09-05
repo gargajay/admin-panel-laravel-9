@@ -31,9 +31,17 @@
             </a>
         </li>
         @endcan
-        @can("labs-list")
+        @can("lab-list")
         <li {{request()->routeIs('backend/lab*') ? 'active':""}}>
             <a href="{{url('backend/lab')}}"><i class="fas fa-user"></i>Labs
+                <div class="top"></div><div class="bottom"></div>
+            </a>
+        </li>
+        @endcan
+
+        @can("testCategory-list")
+        <li {{request()->routeIs('backend/testCategory*') ? 'active':""}}>
+            <a href="{{url('backend/testCategory')}}"><i class="fas fa-user"></i>Test Category
                 <div class="top"></div><div class="bottom"></div>
             </a>
         </li>

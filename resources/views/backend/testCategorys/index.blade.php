@@ -42,7 +42,6 @@
                     </th>
                     
                     <th>Name</th>
-                    <th>Email</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -59,7 +58,6 @@
                                 <span class="checkmark"></span>
                               </label> </td>  
                             <td>{{$item->name}}</td>
-                            <td>{{$item->email}}</td>
                             <td>
                                 <div class="status_div">
                                     <div class="toggle-switch">
@@ -77,14 +75,18 @@
                                     <form method="POST" action="{{url('backend/'.lcFirst($title)."/".$item->id)}}">
                                         @csrf
                                         @method('delete')
-                                        
+
+
+                                        @if(auth()->user()->id==$item->lab->owner->id)
                                             @can(lcFirst($title)."-delete")
                                             <a  class="delete" ><i class="fa fa-trash text-danger"></i></a> |
                                             @endcan
+
                                             @can(lcFirst($title)."-edit")
                                             <a href="{{url('backend/'.lcFirst($title)."/".$item->id.'/edit')}}" class=" "><i class="fa fa-edit text-sucess"></i></a>
                                             @endcan
 
+                                        @endif
                                     </form>
                                 
                                 

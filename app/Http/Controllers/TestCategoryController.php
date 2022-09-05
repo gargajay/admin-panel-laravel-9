@@ -2,7 +2,7 @@
     
     namespace App\Http\Controllers;
     use App\Http\Controllers\Controller;
-    use App\Models\Lab;
+    use App\Models\TestCategory;
     use App\Models\User;
     use Illuminate\Support\Facades\Auth;
     use Illuminate\Http\Request;
@@ -13,18 +13,18 @@
     use Facade\FlareClient\Http\Response;
     use Illuminate\Support\Facades\View;
 
-class LabController extends Controller
+class TestCategoryController extends Controller
 {
     
 
     function __construct()
     {
-         $this->middleware('permission:lab-edit|Lab-list|lab-create|lab-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:lab-create', ['only' => ['create','store']]);
-         $this->middleware('permission:lab-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:lab-delete', ['only' => ['destroy']]);
-         View::share('title', 'Lab');
-         View::share('mainModel', new Lab());
+         $this->middleware('permission:testCategory-edit|testCategory-list|testCategory-create|testCategory-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:testCategory-create', ['only' => ['create','store']]);
+         $this->middleware('permission:testCategory-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:testCategory-delete', ['only' => ['destroy']]);
+         View::share('title', 'TestCategory');
+         View::share('mainModel', new TestCategory());
 
          
     }
@@ -39,7 +39,7 @@ class LabController extends Controller
         $name = $request->query('name');
 
 
-        $items = Lab::orderBy('id','DESC');
+        $items = TestCategory::orderBy('id','DESC');
 
 
         if(!empty($name)) 
@@ -50,7 +50,7 @@ class LabController extends Controller
 
         $items =  $items->paginate(10);
 
-        return view('backend.Labs.index',compact('items','name'));
+        return view('backend.testCategorys.index',compact('items','name'));
         ;
     }
     
@@ -61,7 +61,7 @@ class LabController extends Controller
      */
     public function create()
     {
-        return view('backend.Labs.create');
+        return view('backend.testCategorys.create');
     }
     
     /**
@@ -73,7 +73,7 @@ class LabController extends Controller
     public function store(Request $request)
     {
         $rules =   [
-            'name' => 'required|unique:Labs,name',
+            'name' => 'required|unique:test_categories,name',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -84,17 +84,16 @@ class LabController extends Controller
         }else{
 
             try{
-                $Lab = new Lab();
-                $Lab->name = $request->name;
-                $Lab->status_id = $request->status_id;
-                $Lab->user_id = $request->user_id;
-                $Lab->address = $request->address;
-                $Lab->phone = $request->phone;
-                $Lab->email = $request->email;
+                $TestCategory = new TestCategory();
+                $TestCategory->name = $request->name;
+                $TestCategory->status_id = $request->status_id;
+                $TestCategory->lab_id = $request->lab_id;
 
-                $Lab->save();
-                return redirect('backend/lab')
-                                ->with('success','Lab created successfully');
+            
+
+                $TestCategory->save();
+                return redirect('backend/testCategory')
+                                ->with('success','TestCategory created successfully');
             }catch(Exception $e)
              {
                 return redirect()->back()
@@ -103,7 +102,7 @@ class LabController extends Controller
             
         }
 
-        //dd($request->Lab);
+        //dd($request->TestCategory);
     
     }
    
@@ -116,10 +115,10 @@ class LabController extends Controller
      */
     public function edit($id)
     {
-        $model = Lab::find($id);
+        $model = TestCategory::find($id);
         
       
-        return view('backend.Labs.edit',compact('model'));
+        return view('backend.testCategorys.edit',compact('model'));
     }
     
     /**
@@ -131,8 +130,9 @@ class LabController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         $rules =   [
-            'name' => 'required',
+            'name' => 'required|unique:test_categories,name,'.$id,
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -143,16 +143,14 @@ class LabController extends Controller
         }else{
 
             try{
-            $Lab = Lab::find($id);
-            $Lab->name = $request->input('name');
-            $Lab->status_id = $request->status_id;
-            $Lab->user_id = $request->user_id;
-            $Lab->email = $request->email;
-            $Lab->address = $request->address;
-            $Lab->phone = $request->phone;
-            $Lab->save();
+            $TestCategory = TestCategory::find($id);
+            $TestCategory->name = $request->input('name');
+            $TestCategory->status_id = $request->status_id;
+            $TestCategory->lab_id = $request->lab_id;
+            
+            $TestCategory->save();
         
-            return redirect('backend/lab')->with('success','Lab updated successfully');
+            return redirect('backend/testCategory')->with('success','TestCategory updated successfully');
             }
             catch(Exception $e)
              {
@@ -172,8 +170,8 @@ class LabController extends Controller
     {
 
         try{
-            DB::table("Labs")->where('id',$id)->delete();
-            return redirect('backend/lab')->with('success','Lab deleted successfully');
+            DB::table("testCategorys")->where('id',$id)->delete();
+            return redirect('backend/testCategory')->with('success','TestCategory deleted successfully');
            }
         catch(Exception $e)
            {
@@ -192,17 +190,17 @@ class LabController extends Controller
      */
     public function status($id,$status)
     {
-       $item = Lab::where('id',$id)->first();
+       $item = TestCategory::where('id',$id)->first();
 
        if(empty($item)){
-        return redirect('backend/lab')
+        return redirect('backend/testCategory')
         ->with('error','Record not Found !');
        }
        
        $item->status_id = $status;
        $item->save();
 
-        return redirect('backend/lab')
+        return redirect('backend/testCategory')
                         ->with('success','Status Updated successfully');
     }
 
@@ -225,12 +223,12 @@ class LabController extends Controller
 
        try {
 
-            //Lab::find(25)->delete();
+            //TestCategory::find(25)->delete();
 
-            $items=Lab::find($ids)->each(function ($product, $key) {
+            $items=TestCategory::find($ids)->each(function ($product, $key) {
                 $product->delete();
                 });
-            return response(['message' => 'Labs Deleted Successfully']);
+            return response(['message' => 'testCategorys Deleted Successfully']);
 
         }
         catch(Exception $e) {

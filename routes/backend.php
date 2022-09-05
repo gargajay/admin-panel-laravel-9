@@ -4,6 +4,8 @@ use App\Http\Controllers\LabController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TestCategoryController;
+use App\Models\TestCategory;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth'],'prefix' => 'backend'], function()
@@ -45,16 +47,29 @@ Route::group(['middleware' => ['auth'],'prefix' => 'backend'], function()
     Route::get('user/profile', [UserController::class, 'myProfile']);
 
 
-         //Use Labs
+    //Use Labs
 
-         Route::resources([
-            'lab' => LabController::class
-        ],
-        [
-            'except' => ['show'],
-        ]);
-        Route::get('lab/status/{id}/{status}', [LabController::class, 'status']);
-        Route::post('lab/bulk-delete', [LabController::class, 'bulkDelete']);
+    Route::resources([
+        'lab' => LabController::class
+    ],
+    [
+        'except' => ['show'],
+    ]);
+    Route::get('lab/status/{id}/{status}', [LabController::class, 'status']);
+    Route::post('lab/bulk-delete', [LabController::class, 'bulkDelete']);
+
+     //Use test category
+
+     Route::resources([
+        'testCategory' => TestCategoryController::class
+    ],
+    [
+        'except' => ['show'],
+    ]);
+    Route::get('testCategory/status/{id}/{status}', [TestCategoryController::class, 'status']);
+    Route::post('testCategory/bulk-delete', [TestCategoryController::class, 'bulkDelete']);    
+
+
 
     
 

@@ -1,6 +1,7 @@
 <?php 
 use Spatie\Permission\Models\Role;
 $roles = Role::pluck('name', 'name')->all();
+$modelId = $model ? $model->id:"";
 ?>
 <div class="row">
     <div class="col-md-6">
@@ -9,7 +10,7 @@ $roles = Role::pluck('name', 'name')->all();
     <div class="col-md-6">
         <x-c-input name="email" type="email"  value="{{$model ? $model->email:''}}" />
     </div>
-    @if(auth()->user()->id != $model->id)
+    @if(auth()->user()->id != $modelId)
 
     <div class="col-md-6">
         <x-c-input name="password" type="password"  value="" />
@@ -21,13 +22,13 @@ $roles = Role::pluck('name', 'name')->all();
     @php
         $v = $mainModel->getStatus();
     @endphp
-        @if(auth()->user()->id != $model->id)
+        @if(auth()->user()->id != $modelId)
             <div class="col-md-6">
                 <x-c-input name="status_id" type="select" :option="$v"   value="{{$model ? $model->status_id:''}}" />
             </div>
         @endif
 
-    @if(auth()->user()->id != $model->id)
+    @if(auth()->user()->id != $modelId)
     <div class="col-md-6">
         <div class="form-group ">
             <label class="custom_label" >Roles</label>
