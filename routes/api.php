@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+
+
+Route::get('get-all-beneficiary', [ApiController::class, 'getAllBeneficiary']);
+Route::get('add-beneficiary', [ApiController::class, 'addBeneficiary']);
+Route::get('get-special-beneficiary-record', [ApiController::class, 'GetSpecialBeneficiaryRecord']);
+Route::get('delete-beneficiary', [ApiController::class, 'deleteBeneficiary']);
+Route::get('account-verification', [ApiController::class, 'accountVerification']);
+Route::get('money-transfer', [ApiController::class, 'moneyTransfer']);
+
+
