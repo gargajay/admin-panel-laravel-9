@@ -50,7 +50,7 @@ class LabController extends Controller
 
         $items =  $items->paginate(10);
 
-        return view('backend.Labs.index',compact('items','name'));
+        return view('backend.labs.index',compact('items','name'));
         ;
     }
     
@@ -61,7 +61,7 @@ class LabController extends Controller
      */
     public function create()
     {
-        return view('backend.Labs.create');
+        return view('backend.labs.create');
     }
     
     /**
@@ -119,7 +119,7 @@ class LabController extends Controller
         $model = Lab::find($id);
         
       
-        return view('backend.Labs.edit',compact('model'));
+        return view('backend.labs.edit',compact('model'));
     }
     
     /**
