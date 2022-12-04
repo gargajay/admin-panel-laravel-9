@@ -392,6 +392,12 @@ class ApiController extends Controller
         }
         
     }
+
+
+    public function testSqlInjection(Request $request)
+    {
+            dd($request->search_term);
+    }
     
    
 

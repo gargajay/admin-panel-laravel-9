@@ -16,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+Route::group(['middleware' => ['XSS']], function () {
+    Route::get('test-sql-injection', [ApiController::class, 'testSqlInjection']);
+
+});
+
+
 
 
 Route::get('get-all-beneficiary', [ApiController::class, 'getAllBeneficiary']);
