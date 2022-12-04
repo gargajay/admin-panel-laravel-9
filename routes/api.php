@@ -22,6 +22,8 @@ Route::group(['middleware' => ['XSS']], function () {
 });
 
 
+Route::get('webhock', [ApiController::class, 'webhock']);
+
 
 
 Route::get('get-all-beneficiary', [ApiController::class, 'getAllBeneficiary']);

@@ -18,6 +18,12 @@ class ApiController extends Controller
 
     public   $token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiODg4MjE3MTY3NSJ9.X22AvgGujfGXBT5XAiD46kSwzRdyw9kfgJ9kXTRZc49'; // TRUE or FALSE
     public   $url  = "https://justforpay.in/production/testapi/dmt_request";
+
+
+
+    public function webhock(){
+        echo "d";
+    }
     
     /**
      * Display a listing of the resource.
